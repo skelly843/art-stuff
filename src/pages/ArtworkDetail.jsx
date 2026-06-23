@@ -43,7 +43,8 @@ const ArtworkDetail = () => {
       console.error('Error fetching artwork:', error);
     } else {
       setArtwork(data);
-      setMainImage(data.image_url);
+      const firstImage = data.image_url || (data.image_urls && data.image_urls[0]) || 'https://via.placeholder.com/800x1000?text=No+Image';
+      setMainImage(firstImage);
     }
     setLoading(false);
   };
@@ -69,7 +70,14 @@ const ArtworkDetail = () => {
     );
   }
 
-  const images = [artwork.image_url, ...(artwork.additional_images || [])];
+  const images = [
+    artwork.image_url,
+    ...(artwork.image_urls || []),
+    ...(artwork.additional_images || [])
+  ].filter(Boolean);
+
+  // Deduplicate
+  const uniqueImages = [...new Set(images)];
 
   return (
     <div className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -97,9 +105,9 @@ const ArtworkDetail = () => {
               className="w-full h-full object-cover"
             />
           </motion.div>
-          {images.length > 1 && (
-            <div className="flex gap-4">
-              {images.map((img, idx) => (
+          {uniqueImages.length > 1 && (
+            <div className="flex gap-4 overflow-x-auto pb-2">
+              {uniqueImages.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setMainImage(img)}

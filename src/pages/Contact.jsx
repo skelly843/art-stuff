@@ -1,12 +1,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Send } from 'lucide-react';
+
+// Custom Icons
+const MailIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+);
+const MapPinIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+);
+const SendIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+);
 
 const Contact = () => {
   return (
     <div className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-        <div>
+        <div className="text-left">
           <h1 className="text-5xl font-serif text-brand-950 mb-8">Get in Touch</h1>
           <p className="text-lg text-brand-700 mb-12 leading-relaxed">
             Interested in a piece of art, a custom commission, or just want to say hello?
@@ -17,7 +27,7 @@ const Contact = () => {
           <div className="space-y-6 mb-12">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-900">
-                <Mail size={20} />
+                <MailIcon />
               </div>
               <div>
                 <p className="text-sm text-brand-500 uppercase tracking-wider">Email</p>
@@ -26,7 +36,7 @@ const Contact = () => {
             </div>
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-brand-100 flex items-center justify-center text-brand-900">
-                <MapPin size={20} />
+                <MapPinIcon />
               </div>
               <div>
                 <p className="text-sm text-brand-500 uppercase tracking-wider">Studio Location</p>
@@ -53,7 +63,7 @@ const Contact = () => {
           animate={{ opacity: 1, x: 0 }}
           className="bg-white p-8 md:p-12 rounded-3xl shadow-xl shadow-brand-200/50"
         >
-          <form className="space-y-6">
+          <form className="space-y-6 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-brand-700 mb-2">Name</label>
@@ -94,7 +104,7 @@ const Contact = () => {
               className="w-full py-4 bg-brand-950 text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-brand-900 transition-colors"
             >
               Send Message
-              <Send size={18} />
+              <SendIcon />
             </button>
           </form>
         </motion.div>

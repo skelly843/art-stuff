@@ -49,6 +49,12 @@ const Gallery = ({ showSold = false }) => {
 
   const categories = ['all', ...new Set(artworks.map(a => a.category))].filter(Boolean);
 
+  const getImageUrl = (art) => {
+    if (art.image_url) return art.image_url;
+    if (art.image_urls && art.image_urls.length > 0) return art.image_urls[0];
+    return 'https://via.placeholder.com/800x1000?text=No+Image';
+  };
+
   if (loading) {
     return (
       <div className="pt-40 pb-24 text-center">
@@ -108,7 +114,7 @@ const Gallery = ({ showSold = false }) => {
             <Link to={`/artwork/${art.id}`}>
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl mb-4 bg-brand-100 shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-1">
                 <img
-                  src={art.image_url}
+                  src={getImageUrl(art)}
                   alt={art.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

@@ -34,6 +34,12 @@ const AdminDashboard = () => {
     setLoading(false);
   };
 
+  const getImageUrl = (art) => {
+    if (art.image_url) return art.image_url;
+    if (art.image_urls && art.image_urls.length > 0) return art.image_urls[0];
+    return 'https://via.placeholder.com/100x100?text=No+Img';
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = '/login';
@@ -84,7 +90,7 @@ const AdminDashboard = () => {
         const filePath = `artworks/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
-          .from('portfolio')
+          .from('artworks')
           .upload(filePath, imageFile);
 
         if (uploadError) {
@@ -94,13 +100,18 @@ const AdminDashboard = () => {
         }
 
         const { data: { publicUrl } } = supabase.storage
-          .from('portfolio')
+          .from('artworks')
           .getPublicUrl(filePath);
 
         image_url = publicUrl;
       }
 
-      const artworkData = { ...formData, image_url, price: parseFloat(formData.price) };
+      const artworkData = {
+        ...formData,
+        image_url,
+        image_urls: image_url ? [image_url] : formData.image_urls || [],
+        price: parseFloat(formData.price)
+      };
 
       let error;
       if (artwork?.id) {
@@ -258,7 +269,7 @@ const AdminDashboard = () => {
                     <tr key={art.id} className="hover:bg-brand-50/50 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <img src={art.image_url} alt="" className="w-12 h-12 rounded-lg object-cover bg-brand-100" />
+                          <img src={getImageUrl(art)} alt="" className="w-12 h-12 rounded-lg object-cover bg-brand-100" />
                           <span className="font-medium text-brand-950">{art.title}</span>
                         </div>
                       </td>

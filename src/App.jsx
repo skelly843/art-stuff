@@ -9,24 +9,7 @@ import ArtworkDetail from './pages/ArtworkDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
-
-// Placeholder for Commissions
-const Commissions = () => (
-  <div className="pt-40 pb-24 max-w-3xl mx-auto px-4 text-center">
-    <h1 className="text-5xl font-serif text-brand-950 mb-8">Commissions</h1>
-    <p className="text-lg text-brand-700 mb-12">
-      I am currently accepting custom commission requests for 2024.
-      Whether you are looking for a specific size for your home or a variation
-      on an existing theme, I'd love to collaborate with you.
-    </p>
-    <Link
-      to="/contact"
-      className="inline-flex px-8 py-4 bg-brand-950 text-white rounded-full font-medium hover:bg-brand-900 transition-colors"
-    >
-      Request a Custom Piece
-    </Link>
-  </div>
-);
+import Commissions from './pages/Commissions';
 
 function App() {
   return (

@@ -1,34 +1,60 @@
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+// Replace with your actual publishable key from Stripe Dashboard
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
+/**
+ * Initiates the checkout process for an artwork.
+ *
+ * In a production environment, this typically involves:
+ * 1. Calling your backend (Supabase Edge Function or Node server)
+ * 2. Creating a Stripe Checkout Session on the server using your Stripe Secret Key
+ * 3. Returning the session ID to the frontend
+ * 4. Redirecting the user to the Stripe-hosted checkout page
+ */
 export const createCheckoutSession = async (artwork) => {
   try {
-    // In a real application, you would call your backend (e.g., a Supabase Edge Function or a Node.js server)
-    // to create a Checkout Session and get the session ID.
-    // The backend would use the Stripe Secret Key to create this session securely.
-
     console.log('Initiating checkout for:', artwork.title);
 
-    // Example of what the backend call might look like:
+    // This is the standard pattern for Stripe Checkout in a React SPA
     /*
+    const stripe = await stripePromise;
+
+    // Call your backend to create the session
     const response = await fetch('/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ artworkId: artwork.id }),
+      body: JSON.stringify({
+        artworkId: artwork.id,
+        price: artwork.price,
+        title: artwork.title
+      }),
     });
+
     const session = await response.json();
-    const stripe = await stripePromise;
-    const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
+
+    // Redirect to Stripe Checkout
+    const { error } = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (error) throw error;
     */
 
-    // For now, since we don't have a backend server configured in this environment,
-    // we'll simulate the redirect.
-    alert(`This would redirect to Stripe Checkout for "${artwork.title}" ($${artwork.price}).\n\nTo complete this integration:\n1. Set up a Stripe account.\n2. Create a backend endpoint (e.g., Supabase Edge Function) to handle session creation.\n3. Replace this alert with the stripe.redirectToCheckout call.`);
+    // Since we are in a demo environment without a live backend:
+    alert(
+      `Redirecting to Secure Checkout for "${artwork.title}"\n` +
+      `Price: $${artwork.price.toLocaleString()}\n\n` +
+      `[Integration Note]: This would normally redirect to Stripe. To go live:\n` +
+      `1. Implement a Supabase Edge Function to create a Stripe session.\n` +
+      `2. Add your STRIPE_SECRET_KEY to Supabase Secrets.\n` +
+      `3. Update this function to fetch the session ID from your new endpoint.`
+    );
 
     return { success: true };
   } catch (error) {
-    console.error('Stripe error:', error);
+    console.error('Stripe checkout error:', error);
+    alert('Failed to initiate checkout. Please contact the artist directly.');
     return { success: false, error };
   }
 };

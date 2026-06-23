@@ -1,4 +1,5 @@
--- SUPABASE SCHEMA SUGGESTIONS
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- 1. Artworks Table
 CREATE TABLE artworks (
@@ -8,7 +9,7 @@ CREATE TABLE artworks (
   description TEXT,
   medium TEXT,
   dimensions TEXT,
-  year INTEGER,
+  year_painted INTEGER, -- Renamed from year to match component
   price DECIMAL(12, 2) NOT NULL,
   status TEXT DEFAULT 'available' CHECK (status IN ('available', 'reserved', 'sold')),
   category TEXT,
@@ -18,7 +19,6 @@ CREATE TABLE artworks (
 );
 
 -- 2. Profiles (Admin) Table
--- Linked to Supabase Auth
 CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id),
   full_name TEXT,
@@ -35,10 +35,10 @@ CREATE TABLE orders (
   customer_name TEXT,
   amount_paid DECIMAL(12, 2) NOT NULL,
   stripe_session_id TEXT,
-  status TEXT DEFAULT 'pending' -- pending, completed, cancelled
+  status TEXT DEFAULT 'pending'
 );
 
--- 4. Commissions Table (Optional)
+-- 4. Commissions Table
 CREATE TABLE commissions (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -46,7 +46,7 @@ CREATE TABLE commissions (
   customer_email TEXT NOT NULL,
   details TEXT NOT NULL,
   budget_range TEXT,
-  status TEXT DEFAULT 'requested' -- requested, in-progress, completed, declined
+  status TEXT DEFAULT 'requested'
 );
 
 -- 5. Newsletter Subscriptions
@@ -56,18 +56,8 @@ CREATE TABLE newsletter_subscriptions (
   email TEXT UNIQUE NOT NULL
 );
 
--- ROW LEVEL SECURITY (RLS) POLICIES
-
--- Artworks: Everyone can view, only admin can modify
+-- RLS
 ALTER TABLE artworks ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public can view artworks" ON artworks FOR SELECT USING (true);
-CREATE POLICY "Admin can do everything with artworks" ON artworks FOR ALL
-  USING (auth.jwt() ->> 'role' = 'service_role' OR EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
 
--- Orders: Only admin can view
-ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Admin can view orders" ON orders FOR SELECT
-  USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
-
--- STORAGE BUCKETS
--- You should create a public bucket named 'artworks' for uploading images.
+-- Storage (Bucket name should be 'artworks')

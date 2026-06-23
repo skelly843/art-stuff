@@ -29,6 +29,13 @@ const Home = () => {
     }
   };
 
+  const getImageUrl = (art) => {
+    if (!art) return '';
+    if (art.image_url) return art.image_url;
+    if (art.image_urls && art.image_urls.length > 0) return art.image_urls[0];
+    return 'https://via.placeholder.com/800x1000?text=No+Image';
+  };
+
   return (
     <div className="pt-20">
       {/* Hero Section */}
@@ -88,7 +95,7 @@ const Home = () => {
                 className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl"
               >
                 <img
-                  src={featuredArtwork.image_url}
+                  src={getImageUrl(featuredArtwork)}
                   alt={featuredArtwork.title}
                   className="w-full h-full object-cover"
                 />
